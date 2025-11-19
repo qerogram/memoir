@@ -14,7 +14,7 @@ variable "public_subnet_ids" {
 }
 
 variable "private_subnet_ids" {
-  description = "Private subnet IDs for ECS tasks"
+  description = "Private subnet IDs for ECS tasks (prod only)"
   type        = list(string)
 }
 
@@ -38,13 +38,13 @@ variable "desired_count" {
 variable "cpu" {
   description = "CPU units for the task (256 = 0.25 vCPU)"
   type        = string
-  default     = "512" # 0.5 vCPU
+  default     = "256" # 0.25 vCPU - 충분함 (300명, 동접 10명)
 }
 
 variable "memory" {
   description = "Memory for the task in MB"
   type        = string
-  default     = "1024" # 1GB
+  default     = "512" # 0.5GB - FastAPI는 메모리 적게 씀
 }
 
 variable "db_endpoint" {

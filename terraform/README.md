@@ -35,23 +35,28 @@
         └──────────────────┘
 ```
 
-## 비용 추정
+## 비용 추정 (최적화됨)
 
-### Dev Environment
-- **ECS Fargate**: $7-15/월 (0.5 vCPU, 1GB, 24/7)
-- **RDS db.t4g.micro**: $12-15/월 (단일 AZ)
+### Dev Environment (300명, 동접 10명 기준)
+- **ECS Fargate**: $3-5/월 (0.25 vCPU, 0.5GB, 24/7) ✅ 50% 절감
+- **RDS db.t3.micro**: $0-9/월 (Free tier 12개월 또는 단일 AZ) ✅ 40% 절감
 - **ALB**: $16-20/월
-- **NAT Gateway**: $32/월
+- **NAT Gateway**: ~~$32/월~~ **제거됨!** ✅ $32 절감
 - **S3**: $1-3/월
-- **Total**: **$68-85/월**
+- **Total**: **$20-37/월** (기존 대비 **58% 절감!**)
+
+**최적화 포인트:**
+- ECS를 Public Subnet에 배치 (Security Group으로 보호)
+- RDS는 여전히 Private Subnet (보안 유지)
+- 동접 10명에 충분한 리소스
 
 ### Prod Environment
 - **ECS Fargate**: $15-30/월 (1 vCPU, 2GB)
-- **RDS db.t4g.small**: $25-30/월 (Multi-AZ)
+- **RDS db.t4g.small**: $50-60/월 (Multi-AZ)
 - **ALB**: $20-25/월
-- **NAT Gateway**: $32/월
+- **NAT Gateway**: $32/월 (보안을 위해 유지)
 - **S3 + CloudFront**: $5-10/월
-- **Total**: **$97-127/월**
+- **Total**: **$122-157/월**
 
 ### 비용 절감 팁
 1. **NAT Gateway 제거**: ECS에서 외부 API 호출 불필요 시
@@ -113,16 +118,19 @@ terraform apply
 ## 리소스 상세
 
 ### ECS Fargate
-- **Task CPU**: 0.5 vCPU (dev), 1 vCPU (prod)
-- **Task Memory**: 1GB (dev), 2GB (prod)
+- **Task CPU**: 0.25 vCPU (dev), 1 vCPU (prod) ✅ 비용 최적화
+- **Task Memory**: 0.5GB (dev), 2GB (prod) ✅ FastAPI는 메모리 적게 씀
 - **Desired Count**: 1 (Auto-scaling: 1-3)
 - **Health Check**: `/health` endpoint
+- **Dev Network**: Public subnet (NAT Gateway 비용 절감)
+- **Prod Network**: Private subnet (보안 강화)
 
 ### RDS PostgreSQL
-- **Instance**: db.t4g.micro (dev), db.t4g.small (prod)
+- **Instance**: db.t3.micro (dev), db.t4g.small (prod) ✅ Free tier 가능
 - **Storage**: 20GB GP3 (Auto-scaling up to 100GB)
 - **Backup**: 1 day (dev), 7 days (prod)
 - **Multi-AZ**: No (dev), Yes (prod)
+- **비용**: Free tier 12개월 또는 $9/월
 
 ### 네트워크
 - **VPC CIDR**: 10.0.0.0/16

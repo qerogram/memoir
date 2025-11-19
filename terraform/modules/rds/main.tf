@@ -40,9 +40,10 @@ resource "aws_db_instance" "main" {
   engine         = "postgres"
   engine_version = "15.5"
 
-  # Instance class (가장 작은 인스턴스)
-  # db.t4g.micro: 2 vCPU, 1GB RAM - 300명에 충분
-  instance_class = var.environment == "prod" ? "db.t4g.small" : "db.t4g.micro"
+  # Instance class (최소 비용)
+  # db.t3.micro: Free tier (12개월) 또는 $9/월
+  # db.t4g.micro: ARM 기반, 더 저렴하지만 free tier 없음
+  instance_class = var.environment == "prod" ? "db.t4g.small" : "db.t3.micro"
 
   # Storage
   allocated_storage     = 20  # GB (최소값)

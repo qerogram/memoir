@@ -253,9 +253,11 @@ resource "aws_ecs_service" "main" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = var.private_subnet_ids
+    # Dev: public subnet (NAT Gateway 비용 절감)
+    # Prod: private subnet (보안 강화)
+    subnets          = var.environment == "prod" ? var.private_subnet_ids : var.public_subnet_ids
     security_groups  = [aws_security_group.ecs_tasks.id]
-    assign_public_ip = false
+    assign_public_ip = var.environment == "prod" ? false : true
   }
 
   load_balancer {

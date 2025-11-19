@@ -1,0 +1,24 @@
+# Memoir Backend - Python FastAPI
+# 가벼운 아키텍처 (300명, 동접 10명 대응)
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+asyncpg==0.29.0  # PostgreSQL async driver
+
+# Authentication
+python-jose[cryptography]==3.3.0  # JWT
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Kakao SDK (unofficial)
+requests==2.31.0
+
+# Utilities
+python-dotenv==1.0.1

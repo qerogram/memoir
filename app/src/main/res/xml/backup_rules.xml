@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude sensitive data from backup -->
+    <exclude domain="sharedpref" path="auth_prefs.xml"/>
+    <exclude domain="sharedpref" path="datastore"/>
+    <exclude domain="database" path="memoir_database.db"/>
+</full-backup-content>

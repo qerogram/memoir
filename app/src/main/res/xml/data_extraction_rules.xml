@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Exclude sensitive data from cloud backup -->
+        <exclude domain="sharedpref" path="auth_prefs.xml"/>
+        <exclude domain="sharedpref" path="datastore"/>
+        <exclude domain="database" path="memoir_database.db"/>
+    </cloud-backup>
+</data-extraction-rules>

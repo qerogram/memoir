@@ -9,14 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,9 +28,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.memoir.app.R
 import com.memoir.app.domain.model.IndustryCode
+import com.memoir.app.presentation.components.MemoirPrimaryButton
+import com.memoir.app.presentation.ui.theme.CarrotOrange
 
 /**
  * Profile Setup screen (screen 5)
@@ -44,15 +48,26 @@ fun ProfileSetupScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(horizontal = 32.dp, vertical = 48.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = stringResource(R.string.profile_title),
-            style = MaterialTheme.typography.displaySmall
+            style = MaterialTheme.typography.displaySmall.copy(
+                fontWeight = FontWeight.Bold
+            ),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "5 / 5",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
 
         // Name field
         OutlinedTextField(
@@ -61,10 +76,14 @@ fun ProfileSetupScreen(
             label = { Text(stringResource(R.string.profile_name_label)) },
             isError = state.nameError != null,
             supportingText = state.nameError?.let { { Text(it) } },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = CarrotOrange,
+                focusedLabelColor = CarrotOrange
+            )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Role field
         OutlinedTextField(
@@ -73,10 +92,14 @@ fun ProfileSetupScreen(
             label = { Text(stringResource(R.string.profile_role_label)) },
             isError = state.roleError != null,
             supportingText = state.roleError?.let { { Text(it) } },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = CarrotOrange,
+                focusedLabelColor = CarrotOrange
+            )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Industry dropdown
         var expanded by remember { mutableStateOf(false) }
@@ -92,7 +115,11 @@ fun ProfileSetupScreen(
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor()
+                    .menuAnchor(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = CarrotOrange,
+                    focusedLabelColor = CarrotOrange
+                )
             )
 
             ExposedDropdownMenu(
@@ -111,7 +138,7 @@ fun ProfileSetupScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Growth goals field
         OutlinedTextField(
@@ -123,7 +150,12 @@ fun ProfileSetupScreen(
                 Text(stringResource(R.string.profile_growth_goals_counter, state.growthGoals.length))
             },
             maxLines = 5,
-            modifier = Modifier.fillMaxWidth()
+            minLines = 3,
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = CarrotOrange,
+                focusedLabelColor = CarrotOrange
+            )
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -160,16 +192,16 @@ fun ProfileSetupScreen(
         }
 
         // Submit button
-        Button(
+        MemoirPrimaryButton(
+            text = stringResource(R.string.profile_submit_button),
             onClick = { viewModel.submitProfile(onProfileSubmitted) },
             enabled = state.isFormValid && !state.isSubmitting,
             modifier = Modifier.fillMaxWidth()
-        ) {
-            if (state.isSubmitting) {
-                CircularProgressIndicator()
-            } else {
-                Text(stringResource(R.string.profile_submit_button))
-            }
+        )
+
+        if (state.isSubmitting) {
+            Spacer(modifier = Modifier.height(16.dp))
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     }
 }
@@ -186,7 +218,11 @@ fun CheckboxWithLabel(
     ) {
         Checkbox(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = CarrotOrange,
+                checkmarkColor = MaterialTheme.colorScheme.onPrimary
+            )
         )
         Text(
             text = label,

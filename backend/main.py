@@ -4,6 +4,7 @@ Memoir Backend - FastAPI
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from routes import router
 
 app = FastAPI(
     title="Memoir API",
@@ -20,9 +21,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# API 라우터 등록
+app.include_router(router)
+
 @app.get("/")
 async def root():
-    return {"message": "Memoir API v1.0"}
+    return {"message": "Memoir API v1.0", "docs": "/docs"}
 
 @app.get("/health")
 async def health_check():

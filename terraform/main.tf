@@ -33,6 +33,15 @@ provider "aws" {
   }
 }
 
+# ECR Repository Module
+module "ecr" {
+  source = "./modules/ecr"
+
+  environment     = var.environment
+  repository_name = "memoir-backend"
+  scan_on_push    = true
+}
+
 # VPC Module
 module "vpc" {
   source = "./modules/vpc"
@@ -78,4 +87,14 @@ module "s3" {
 
   environment = var.environment
   bucket_name = var.s3_bucket_name
+}
+
+# GitHub OIDC for CI/CD (Optional)
+module "github_oidc" {
+  count  = var.enable_github_oidc ? 1 : 0
+  source = "./modules/github-oidc"
+
+  github_org  = var.github_org
+  github_repo = var.github_repo
+  environment = var.environment
 }

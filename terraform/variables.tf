@@ -59,3 +59,22 @@ variable "s3_bucket_name" {
   description = "S3 bucket name for static assets"
   type        = string
 }
+
+# GitHub OIDC (Optional)
+variable "github_org" {
+  description = "GitHub organization or username"
+  type        = string
+  default     = ""
+}
+
+variable "github_repo" {
+  description = "GitHub repository name"
+  type        = string
+  default     = ""
+}
+
+variable "enable_github_oidc" {
+  description = "Enable GitHub OIDC for CI/CD"
+  type        = bool
+  default     = false
+}

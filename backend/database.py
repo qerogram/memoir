@@ -7,9 +7,10 @@ from sqlalchemy.orm import declarative_base
 from config import settings
 
 # Async engine
+import os
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=True,  # Development only - SQL 로그 출력
+    echo=os.getenv("SQL_ECHO", "false").lower() == "true",  # Disable in production
     future=True,
 )
 

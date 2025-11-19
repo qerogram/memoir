@@ -3,9 +3,9 @@ API 라우터
 """
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from database import get_db
 from models import User, RefreshToken, UserStatus
@@ -126,12 +126,11 @@ async def refresh_access_token(
     new_refresh_token_str = create_refresh_token(token_data)
 
     # 기존 리프레시 토큰 폐기하고 새 토큰 저장
-    await db.execute(
-        select(RefreshToken).where(
-            RefreshToken.user_id == user_id,
-            RefreshToken.revoked == False
-        ).update({"revoked": True})
-    )
+    stmt = update(RefreshToken).where(
+        RefreshToken.user_id == user_id,
+        RefreshToken.revoked == False
+    ).values(revoked=True)
+    await db.execute(stmt)
 
     refresh_token = RefreshToken(
         user_id=user.id,

@@ -13,9 +13,16 @@ app = FastAPI(
 )
 
 # CORS 설정
+import os
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else [
+    "https://memoir.app",
+    "https://www.memoir.app",
+    "http://localhost:3000",  # Development
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Production에서는 특정 도메인으로 제한
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

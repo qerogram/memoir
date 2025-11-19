@@ -37,9 +37,19 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideAuthTokenInterceptor(authDataStore: AuthDataStore): Interceptor {
+        // Memory cache for token to avoid blocking on every request
+        var cachedToken: String? = null
+
         return Interceptor { chain ->
             val request = chain.request()
-            val accessToken = runBlocking { authDataStore.getAccessToken() }
+
+            // Use cached token if available, otherwise fetch synchronously
+            // TODO: Implement proper token refresh mechanism with Authenticator
+            val accessToken = cachedToken ?: kotlin.runCatching {
+                runBlocking { authDataStore.getAccessToken() }
+            }.getOrNull()
+
+            cachedToken = accessToken
 
             val newRequest = if (!accessToken.isNullOrBlank()) {
                 request.newBuilder()
